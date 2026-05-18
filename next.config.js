@@ -1,4 +1,8 @@
-// Build trigger: 1779135714
-/** @type {import("next").NextConfig} */
-const nextConfig={typescript:{ignoreBuildErrors:true},eslint:{ignoreDuringBuilds:true},reactStrictMode:false}
-module.exports=nextConfig
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
+  output: 'standalone',
+  experimental: { serverComponentsExternalPackages: ['@supabase/supabase-js'] },
+}
+module.exports = nextConfig
