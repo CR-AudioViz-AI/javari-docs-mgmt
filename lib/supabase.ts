@@ -55,3 +55,7 @@ export function shouldChargeCredits(e?: string | null) {
 export function isAdmin(e?: string | null) {
   return !shouldChargeCredits(e)
 }
+// Aliases for components that import specific client creation functions
+export const createSupabaseBrowserClient = getSupabaseClient
+export const createClientComponentClient = getSupabaseClient
+export const createServerComponentClient = getSupabaseAdmin
