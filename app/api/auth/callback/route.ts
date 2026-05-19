@@ -1,3 +1,3 @@
+// Redirected to src/app/api/auth/callback/route.ts
 export const dynamic='force-dynamic'
-export const runtime='nodejs'
-export async function GET(){return Response.json({ok:true})}
+export async function GET(){return Response.redirect('/')}
