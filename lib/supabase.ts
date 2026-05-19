@@ -1,14 +1,15 @@
-// lib/supabase.ts May 16 2026 - lazy init to prevent build-time errors
+// lib/supabase.ts — lazy init, no module-level createClient calls
 import { createClient as _c } from "@supabase/supabase-js"
 
-function getURL() { return process.env.NEXT_PUBLIC_SUPABASE_URL ?? "" }
-function getANON() { return process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "" }
-function getSVC() { return process.env.SUPABASE_SERVICE_ROLE_KEY ?? getANON() }
+function getURL() { return process.env.NEXT_PUBLIC_SUPABASE_URL || "" }
+function getANON() { return process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "" }
+function getSVC() { return process.env.SUPABASE_SERVICE_ROLE_KEY || getANON() }
 
+// Lazy singletons
 let _supabase: ReturnType<typeof _c> | null = null
 let _supabaseAdmin: ReturnType<typeof _c> | null = null
 
-export function getSupabase() {
+export function getSupabaseClient() {
   if (!_supabase) _supabase = _c(getURL(), getANON())
   return _supabase
 }
@@ -18,26 +19,31 @@ export function getSupabaseAdmin() {
   return _supabaseAdmin
 }
 
-// Legacy named exports for backward compat - lazy proxies
-export const supabase = new Proxy({} as ReturnType<typeof _c>, {
-  get(_: any, prop: string) {
-    return (getSupabase() as any)[prop]
-  }
-})
+// Named aliases — call these lazily, not at module scope
+export function getSupabase() { return getSupabaseClient() }
 
-export const supabaseAdmin = new Proxy({} as ReturnType<typeof _c>, {
-  get(_: any, prop: string) {
-    return (getSupabaseAdmin() as any)[prop]
-  }
-})
-
+// createClient helpers
 export const createClient = () => _c(getURL(), getANON())
 export const createClientComponentClient = () => _c(getURL(), getANON())
 export const createServerComponentClient = () => _c(getURL(), getANON())
 
+// Convenience re-exports for code that uses `supabase.from(...)` directly
+// These are getters so they initialize lazily
+export const supabase = {
+  get auth() { return getSupabaseClient().auth },
+  from: (table: string) => getSupabaseClient().from(table),
+  rpc: (fn: string, args?: object) => getSupabaseClient().rpc(fn, args),
+}
+
+export const supabaseAdmin = {
+  get auth() { return getSupabaseAdmin().auth },
+  from: (table: string) => getSupabaseAdmin().from(table),
+  rpc: (fn: string, args?: object) => getSupabaseAdmin().rpc(fn, args),
+}
+
 export async function getUser(c?: ReturnType<typeof createClient>) {
   try {
-    const { data: { user } } = await (c ?? getSupabase()).auth.getUser()
+    const { data: { user } } = await (c ?? getSupabaseClient()).auth.getUser()
     return user
   } catch { return null }
 }
