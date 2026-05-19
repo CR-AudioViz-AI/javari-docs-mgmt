@@ -1,3 +1,3 @@
 export const dynamic='force-dynamic'
 export const runtime='nodejs'
-export async function GET(req:Request){return Response.json({ok:true})}
+export async function GET(){return Response.json({ok:true})}
