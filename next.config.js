@@ -2,6 +2,8 @@
 const nextConfig = {
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-  experimental: { serverComponentsExternalPackages: ['@supabase/supabase-js'] },
+  experimental: {
+    serverComponentsExternalPackages: ['@supabase/supabase-js'],
+  },
 }
 module.exports = nextConfig
