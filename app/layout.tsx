@@ -1,11 +1,4 @@
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = { title: 'Javari Docs Mgmt' }
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
-  )
-}
+// This file exists as a placeholder only.
+// The actual root layout is in src/app/layout.tsx
+// Do not export a default layout from this file.
+export const dynamic = 'force-dynamic'
