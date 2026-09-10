@@ -1,6 +1,6 @@
 {
   "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "next build",
+  "buildCommand": "node scripts/check-sdk-install.mjs && next build",
   "github": {
     "autoAlias": false
   }
